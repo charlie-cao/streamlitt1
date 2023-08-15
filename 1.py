@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-st.title('Uber pickups in NYC')
+st.title('给老顾做了一个Uber玩')
 
 DATE_COLUMN = 'date/time'
 DATA_URL = ('https://s3-us-west-2.amazonaws.com/'
@@ -16,15 +16,15 @@ def load_data(nrows):
     data[DATE_COLUMN] = pd.to_datetime(data[DATE_COLUMN])
     return data
 
-data_load_state = st.text('Loading data...')
+data_load_state = st.text('读取数据...')
 data = load_data(10000)
-data_load_state.text("Done! (using st.cache_data)")
+data_load_state.text("成功")
 
-if st.checkbox('Show raw data'):
-    st.subheader('Raw data')
+if st.checkbox('显示数据'):
+    st.subheader('原始数据')
     st.write(data)
 
-st.subheader('Number of pickups by hour')
+st.subheader('按小时选择')
 hist_values = np.histogram(data[DATE_COLUMN].dt.hour, bins=24, range=(0,24))[0]
 st.bar_chart(hist_values)
 
@@ -32,5 +32,5 @@ st.bar_chart(hist_values)
 hour_to_filter = st.slider('hour', 0, 23, 17)
 filtered_data = data[data[DATE_COLUMN].dt.hour == hour_to_filter]
 
-st.subheader('Map of all pickups at %s:00' % hour_to_filter)
+st.subheader('在地图上显示 %s:00' % hour_to_filter)
 st.map(filtered_data)
